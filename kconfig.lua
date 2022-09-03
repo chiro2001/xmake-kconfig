@@ -26,7 +26,7 @@ function _init()
   end
   if not _list_in(files, config_file) or not os.exists("$(buildir)$(config_head)") then
     local exec = "$(python) -m genconfig --config-out $(config_file) --header-path $(buildir)$(config_head)"
-    cprint("${bright}%s", exec)
+    cprint("${bright}Kconfig run: %s", exec)
     os.exec(exec)
   end
 end
