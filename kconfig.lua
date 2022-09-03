@@ -24,8 +24,8 @@ function _init()
   if not os.exists("$(buildir)/include/generated") then
     os.mkdir("$(buildir)/include/generated")
   end
-  if not _list_in(files, config_file) or not os.exists("$(buildir)$(config_head)") then
-    local exec = "$(python) -m genconfig --config-out $(config_file) --header-path $(buildir)$(config_head)"
+  if not _list_in(files, config_file) or not os.exists("$(buildir)/$(config_head)") then
+    local exec = "$(python) -m genconfig --config-out $(config_file) --header-path $(buildir)/$(config_head)"
     cprint("${bright}Kconfig run: %s", exec)
     os.exec(exec)
   end
