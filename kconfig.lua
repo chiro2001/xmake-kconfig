@@ -31,6 +31,12 @@ function _init()
   end
 end
 
+function clean()
+  os.rm("$(buildir)/$(config_head)")
+  os.rm("$(projectdir)/$(config_file)")
+  os.rm("$(projectdir)/$(config_file).old")
+end
+
 function load()
   _init()
   local kc = {}

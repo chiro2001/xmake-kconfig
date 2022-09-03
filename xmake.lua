@@ -10,6 +10,13 @@ option("config_head")
     set_default("include/generated/autoconf.h")
     set_showmenu(true)
 
+task("menuclean")
+    set_category("plugin")
+    on_run(function ()
+        import("kconfig")
+        kconfig.clean()
+    end)
+
 task("menuconfig")
     set_category("plugin")
     on_run(function ()
