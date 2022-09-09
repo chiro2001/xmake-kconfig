@@ -19,15 +19,31 @@ function _split(inputstr, sep)
 end
 
 function _init()
-  local config_file = ".config"
-  local files = os.files("*")
-  if not os.exists("$(buildir)/include/generated") then
-    os.mkdir("$(buildir)/include/generated")
+  if not os.exists(os.projectdir() .. "/build") then
+    local mkdir_exec = "$(python) -c \"import os; os.mkdir('$(projectdir)/$(buildir)')\""
+    if type(os.exec) ~= "nil" then
+      print(mkdir_exec)
+      os.exec(mkdir_exec)
+    else
+      print("run `xmake genconfig' first! To run:", mkdir_exec)
+      return
+    end
   end
-  if not _list_in(files, config_file) or not os.exists("$(buildir)/$(config_head)") then
+  local path_config_file = "$(projectdir)/$(config_file)"
+  local path_config_head = "$(projectdir)/$(buildir)/$(config_head)"
+  if type(os.exec) == "nil" then
+    path_config_file = os.projectdir() .. "/.config"
+    path_config_head = os.projectdir() .. "/build/autoconf.h"
+  end
+  -- print("#2", os.exists(path_config_file), os.exists(path_config_head))
+  if not os.exists(path_config_file) or not os.exists(path_config_head) then
     local exec = "$(python) -m genconfig --config-out $(config_file) --header-path $(buildir)/$(config_head)"
-    cprint("${bright}Kconfig run: %s", exec)
-    os.exec(exec)
+    if type(os.exec) ~= "nil" then
+      cprint("${bright}Kconfig run: %s", exec)
+      os.exec(exec)
+    else
+      print("run `xmake genconfig' first! To run:", exec)
+    end
   end
 end
 
@@ -40,6 +56,7 @@ end
 function load()
   _init()
   local kc = {}
+  if not os.exists(os.projectdir() .. "/build") then return nil end
   local data_str = io.readfile("$(projectdir)/$(config_file)")
   local data = _split(data_str, "\n")
   for _, d in ipairs(data) do

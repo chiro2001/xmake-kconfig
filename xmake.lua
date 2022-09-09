@@ -1,14 +1,4 @@
-option("python")
-    set_default("python3")
-    set_showmenu(true)
-
-option("config_file")
-    set_default(".config")
-    set_showmenu(true)
-
-option("config_head")
-    set_default("include/generated/autoconf.h")
-    set_showmenu(true)
+includes("options.lua")
 
 task("menuclean")
     set_category("plugin")
@@ -31,7 +21,11 @@ task("menuconfig")
 task("genconfig")
     set_category("plugin")
     on_run(function ()
-        os.exec("python3 -m genconfig --config-out .config --header-path build/include/generated/autoconf.h")
+        local config_dir = os.projectdir() .. "/build"
+        if not os.exists(config_dir) then os.mkdir(config_dir) end
+        local exec = "python3 -m genconfig --config-out .config --header-path " .. os.projectdir() .. "/build/autoconf.h"
+        cprint("${bright}%s", exec)
+        os.exec(exec)
     end)
     set_menu {
                 usage = "xmake genconfig",
