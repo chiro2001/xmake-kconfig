@@ -29,6 +29,6 @@ task("genconfig")
     end)
     set_menu {
                 usage = "xmake genconfig",
-                description = "Generate .config and autoconfig.h",
+                description = "Generate .config and autoconf.h",
                 options = {}
             }
